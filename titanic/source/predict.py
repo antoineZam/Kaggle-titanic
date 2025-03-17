@@ -49,6 +49,7 @@ def predict(model_path='models/best_model.pkl', scaler_path='models/scaler.pkl',
         print(f"Error during prediction: {str(e)}")
         return None, None
 
+
 if __name__ == "__main__":
     predictions, submission = predict()
     if predictions is not None:
