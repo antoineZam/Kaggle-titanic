@@ -69,14 +69,14 @@ def load_data():
     X_test = test_df[features]
 
     # Save processed datasets to CSV files
-    X_train.to_csv('processed/train_features.csv', index=False)
-    y_train.to_csv('processed/train_target.csv', index=False)
-    X_test.to_csv('processed/test_features.csv', index=False)
+    X_train.to_csv('data/processed/train_features.csv', index=False)
+    y_train.to_csv('data/processed/train_target.csv', index=False)
+    X_test.to_csv('data/processed/test_features.csv', index=False)
 
     print("\nProcessed datasets have been saved to:")
-    print("- processed/train_features.csv")
-    print("- processed/train_target.csv")
-    print("- processed/test_features.csv")
+    print("- data/processed/train_features.csv")
+    print("- data/processed/train_target.csv")
+    print("- data/processed/test_features.csv")
 
     return X_train, y_train, X_test, test_df['PassengerId']
 
