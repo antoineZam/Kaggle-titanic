@@ -39,8 +39,8 @@ def plot_roc_curve(y_true, y_pred_proba, title, save_path):
 
 def train_models():
     # Create necessary directories
-    os.makedirs(f'C:/source/kaggle/Kaggle-titanic/titanic/models', exist_ok=True)
-    os.makedirs(f'C:/source/kaggle/Kaggle-titanic/titanic/data/processed', exist_ok=True)
+    os.makedirs('../models', exist_ok=True)
+    os.makedirs('../data/processed', exist_ok=True)
     
     # Load and preprocess data
     X_train, y_train, X_test, passenger_ids = load_data()
@@ -135,13 +135,13 @@ def train_models():
         plot_confusion_matrix(
             y_train, train_pred,
             f'Confusion Matrix - {name}',
-            f'C:/source/kaggle/Kaggle-titanic/titanic/models/confusion_matrix_{name.lower().replace(" ", "_")}.png'
+            f'../models/confusion_matrix_{name.lower().replace(" ", "_")}.png'
         )
         
         plot_roc_curve(
             y_train, train_pred_proba,
             f'ROC Curve - {name}',
-            f'C:/source/kaggle/Kaggle-titanic/titanic/models/roc_curve_{name.lower().replace(" ", "_")}.png'
+            f'../models/roc_curve_{name.lower().replace(" ", "_")}.png'
         )
         
         # Save model metrics
@@ -159,7 +159,7 @@ def train_models():
             'cv_score': current_score,
             'train_accuracy': train_acc
         }
-        joblib.dump(model_info, f'C:/source/kaggle/Kaggle-titanic/titanic/models/{name.lower().replace(" ", "_")}_model.pkl')
+        joblib.dump(model_info, f'../models/{name.lower().replace(" ", "_")}_model.pkl')
         
         # Update best model if current one is better
         if current_score > best_score:
@@ -169,12 +169,12 @@ def train_models():
             best_params = current_params
     
     # Save model comparison metrics
-    model_metrics.to_csv('C:/source/kaggle/Kaggle-titanic/titanic/models/model_comparison.csv', index=False)
+    model_metrics.to_csv('../models/model_comparison.csv', index=False)
     print("\nModel comparison metrics saved to 'models/model_comparison.csv'")
     
     # Save the best model and scaler
-    joblib.dump(best_model, 'C:/source/kaggle/Kaggle-titanic/titanic/models/best_model.pkl')
-    joblib.dump(scaler, 'C:/source/kaggle/Kaggle-titanic/titanic/models/scaler.pkl')
+    joblib.dump(best_model, '../models/best_model.pkl')
+    joblib.dump(scaler, '../models/scaler.pkl')
     print(f"\nBest model ({best_model_name}) saved as 'models/best_model.pkl' with CV score: {best_score:.3f}")
     print(f"Best parameters: {best_params}")
     

@@ -27,8 +27,8 @@ def engineer_features(df):
 
 
 def load_data():
-    train_df = pd.read_csv("data/train.csv")
-    test_df = pd.read_csv("data/test.csv")
+    train_df = pd.read_csv("../data/train.csv")
+    test_df = pd.read_csv("../data/test.csv")
 
     #print(train_df.head())
     #print(test_df.head())
@@ -69,14 +69,14 @@ def load_data():
     X_test = test_df[features]
 
     # Save processed datasets to CSV files
-    X_train.to_csv('data/processed/train_features.csv', index=False)
-    y_train.to_csv('data/processed/train_target.csv', index=False)
-    X_test.to_csv('data/processed/test_features.csv', index=False)
+    X_train.to_csv('../data/processed/train_features.csv', index=False)
+    y_train.to_csv('../data/processed/train_target.csv', index=False)
+    X_test.to_csv('../data/processed/test_features.csv', index=False)
 
     print("\nProcessed datasets have been saved to:")
-    print("- data/processed/train_features.csv")
-    print("- data/processed/train_target.csv")
-    print("- data/processed/test_features.csv")
+    print("- ../data/processed/train_features.csv")
+    print("- ../data/processed/train_target.csv")
+    print("- ../data/processed/test_features.csv")
 
     return X_train, y_train, X_test, test_df['PassengerId']
 
