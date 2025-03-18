@@ -3,7 +3,7 @@ import pandas as pd
 from datasetloader import load_data
 import os
 
-def predict(model_path='models/best_model.pkl', scaler_path='models/scaler.pkl', output_path='submission.csv'):
+def predict(model_path='../models/best_model.pkl', scaler_path='../models/scaler.pkl', output_path='../submission.csv'):
     try:
         # Check if model and scaler files exist
         if not os.path.exists(model_path):
