@@ -86,6 +86,12 @@ def load_data():
     # Convert 'Sex' to numerical values
     train_df['Sex'] = train_df['Sex'].map({'male': 0, 'female': 1})
     test_df['Sex'] = test_df['Sex'].map({'male': 0, 'female': 1})
+    
+    train_df = handle_cabin(train_df)
+    test_df = handle_cabin(test_df)
+    
+    train_df = handle_deck(train_df)
+    test_df = handle_deck(test_df)
 
  # One-Hot Encode Categorical Features
     categorical_features = ['Title', 'AgeGroup', 'FareCategory', 'Embarked', 'Deck']
