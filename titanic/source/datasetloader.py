@@ -59,6 +59,12 @@ def handle_deck(df):
     df['Deck'] = df['Cabin'].str[0].fillna('U') # 'U' for unknown
     return df
 
+
+def pclass_age_group_interaction(df):
+    df['Pclass_AgeGroup'] = df['Pclass'].astype(str) + '_' + df['AgeGroup'].astype(str)
+    return df
+
+
 def load_data():
     train_df = pd.read_csv("../data/train.csv")
     test_df = pd.read_csv("../data/test.csv")
@@ -94,7 +100,7 @@ def load_data():
     test_df = handle_deck(test_df)
 
  # One-Hot Encode Categorical Features
-    categorical_features = ['Title', 'AgeGroup', 'FareCategory', 'Embarked', 'Deck']
+    categorical_features = ['Title', 'AgeGroup', 'FareCategory', 'Embarked', 'Deck', 'Pclass_AgeGroup']
     train_categorical = pd.get_dummies(train_df[categorical_features], drop_first=True) # drop_first=True to avoid multicollinearity
     test_categorical = pd.get_dummies(test_df[categorical_features], drop_first=True)
 
@@ -122,13 +128,6 @@ def load_data():
     y_train = train_df["Survived"]
     X_test = pd.concat([X_test_numerical, test_categorical], axis=1)
 
-    # **Create Pclass-AgeGroup Interaction Features**
-    age_group_cols = [col for col in train_categorical.columns if 'AgeGroup_' in col]
-    for pclass in [1, 2, 3]:
-        for age_group in age_group_cols:
-            X_train[f'Pclass_{pclass}_{age_group}'] = X_train['Pclass'] * X_train[age_group]
-            X_test[f'Pclass_{pclass}_{age_group}'] = X_test['Pclass'] * X_test[age_group]
-            
     # Fill any remaining NaN values with the median of the column (important after one-hot encoding too)
     for col in X_train.columns:
         if X_train[col].isnull().any():
