@@ -50,6 +50,14 @@ def engineer_features(df):
 
     return df
 
+def handle_cabin(df):
+    df['CabinKnown'] = df['Cabin'].notna().astype(int)
+    return df
+
+
+def handle_deck(df):
+    df['Deck'] = df['Cabin'].str[0].fillna('U') # 'U' for unknown
+    return df
 
 def load_data():
     train_df = pd.read_csv("../data/train.csv")
@@ -80,7 +88,7 @@ def load_data():
     test_df['Sex'] = test_df['Sex'].map({'male': 0, 'female': 1})
 
  # One-Hot Encode Categorical Features
-    categorical_features = ['Title', 'AgeGroup', 'FareCategory', 'Embarked']
+    categorical_features = ['Title', 'AgeGroup', 'FareCategory', 'Embarked', 'Deck']
     train_categorical = pd.get_dummies(train_df[categorical_features], drop_first=True) # drop_first=True to avoid multicollinearity
     test_categorical = pd.get_dummies(test_df[categorical_features], drop_first=True)
 
@@ -99,7 +107,7 @@ def load_data():
     test_categorical = test_categorical[train_categorical.columns] # Ensure same order
 
     numerical_features = ["Pclass", "Sex", "Age", "Fare", "FamilySize",
-                          "IsAlone", "FarePerPerson"]
+                          "IsAlone", "FarePerPerson", "CabinKnown"]
 
     X_train_numerical = train_df[numerical_features]
     X_test_numerical = test_df[numerical_features]
