@@ -30,8 +30,9 @@ def impute_age(df):
 
 
 def engineer_features(df):
-    # Extract titles
+    # Extract and group titles
     df['Title'] = df['Name'].apply(extract_title)
+    df = group_titles(df)
 
     # Create age groups
     df['AgeGroup'] = pd.cut(df['Age'], bins=[0, 12, 18, 35, 50, 80], labels=['Child', 'Teen', 'Young', 'Adult', 'Elder'])
