@@ -7,6 +7,20 @@ def extract_title(name):
     return title
 
 
+def group_titles(df):
+    Officer = ['Capt', 'Col', 'Major', 'Dr', 'Rev']
+    Royalty = ['Don', 'Lady', 'Countess', 'Jonkheer']
+    Miss = ['Mlle', 'Ms']
+    Mrs = ['Mme']
+    Mr = ['Mr']
+    df['Title'] = df['Title'].replace(Officer, 'Officer')
+    df['Title'] = df['Title'].replace(Royalty, 'Royalty')
+    df['Title'] = df['Title'].replace(Miss, 'Miss')
+    df['Title'] = df['Title'].replace(Mrs, 'Mrs')
+    df['Title'] = df['Title'].replace(Mr, 'Mr')
+    return df
+
+
 def impute_age(df):
     for title in df['Title'].unique():
         for pclass in df['Pclass'].unique():
