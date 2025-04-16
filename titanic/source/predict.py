@@ -3,6 +3,7 @@ import pandas as pd
 from datasetloader import load_data
 import os
 
+
 def predict(model_path='../models/best_model.pkl', scaler_path='../models/scaler.pkl', output_path='../submission.csv'):
     try:
         # Check if model and scaler files exist
@@ -10,20 +11,20 @@ def predict(model_path='../models/best_model.pkl', scaler_path='../models/scaler
             raise FileNotFoundError(f"Model file '{model_path}' not found. Please train the model first.")
         if not os.path.exists(scaler_path):
             raise FileNotFoundError(f"Scaler file '{scaler_path}' not found. Please train the model first.")
-        
+
         # Load the trained model and scaler
         model = joblib.load(model_path)
         scaler = joblib.load(scaler_path)
-        
+
         # Load test data
         _, _, X_test, passenger_ids = load_data()
-        
+
         # Scale features
         X_test_scaled = scaler.transform(X_test)
-        
+
         # Make predictions
         predictions = model.predict(X_test_scaled)
-        
+
         # Create submission file
         submission = pd.DataFrame({
             'PassengerId': passenger_ids,
