@@ -1,4 +1,4 @@
 Model,Best Parameters,CV Score,Training Accuracy
-Random Forest,"{'max_depth': 10, 'max_features': 'log2', 'min_samples_leaf': 2, 'min_samples_split': 5, 'n_estimators': 100}",0.8462243424769318,0.9169472502805837
-Gradient Boosting,"{'learning_rate': 0.1, 'max_depth': 3, 'min_samples_split': 5, 'n_estimators': 100, 'subsample': 0.8}",0.8518172117255665,0.9012345679012346
-XGBoost,"{'colsample_bytree': 1.0, 'learning_rate': 0.3, 'max_depth': 4, 'min_child_weight': 5, 'n_estimators': 100, 'subsample': 0.8}",0.8484589793484402,0.9124579124579124
+Random Forest,"{'max_depth': 10, 'max_features': None, 'min_samples_leaf': 2, 'min_samples_split': 10, 'n_estimators': 300}",0.8451070240411778,0.9090909090909091
+Gradient Boosting,"{'learning_rate': 0.1, 'max_depth': 3, 'min_samples_split': 5, 'n_estimators': 100, 'subsample': 0.9}",0.8518234887954301,0.9012345679012346
+XGBoost,"{'colsample_bytree': 1.0, 'learning_rate': 0.1, 'max_depth': 4, 'min_child_weight': 5, 'n_estimators': 100, 'subsample': 0.9}",0.846218065407068,0.8866442199775533

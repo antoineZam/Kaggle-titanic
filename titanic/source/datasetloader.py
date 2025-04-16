@@ -18,21 +18,20 @@ def impute_age(df):
 def engineer_features(df):
     # Extract titles
     df['Title'] = df['Name'].apply(extract_title)
-    
+
     # Create age groups
     df['AgeGroup'] = pd.cut(df['Age'], bins=[0, 12, 18, 35, 50, 80], labels=['Child', 'Teen', 'Young', 'Adult', 'Elder'])
-    
+
     # Create fare categories
     df['FareCategory'] = pd.qcut(df['Fare'], q=4, labels=['Low', 'Med', 'Med-High', 'High'])
-    
+
     # Create is_alone feature
     df['IsAlone'] = (df['SibSp'] + df['Parch'] == 0).astype(int)
-    
+
     # Create fare per person
-    df['FarePerPerson'] = df['Fare'] / (df['FamilySize'] + 1e-6)
+    df['FarePerPerson'] = df['Fare'] / (df['FamilySize'] + 1e-6) # Added a small epsilon to prevent division by zero
 
     return df
-
 
 
 def load_data():
@@ -71,9 +70,20 @@ def load_data():
     features = ["Pclass", "Sex", "Age", "Fare", "Embarked", "FamilySize",
                 "IsAlone", "FarePerPerson"]
 
-    X_train = train_df[features]
-    y_train = train_df["Survived"]
-    X_test = test_df[features]
+    X_train = train_df[features].copy() # Use .copy() to avoid SettingWithCopyWarning
+    y_train = train_df["Survived"].copy()
+    X_test = test_df[features].copy()
+
+    # Fill any remaining NaN values with the median of the column
+    for col in X_train.columns:
+        if X_train[col].isnull().any():
+            median_val = X_train[col].median()
+            X_train[col].fillna(median_val, inplace=True)
+
+    for col in X_test.columns:
+        if X_test[col].isnull().any():
+            median_val = X_test[col].median()
+            X_test[col].fillna(median_val, inplace=True)
 
     # Save processed datasets to CSV files
     import os
@@ -88,7 +98,6 @@ def load_data():
     print("- ../data/processed/test_features.csv")
 
     return X_train, y_train, X_test, test_df['PassengerId']
-
 
 
 if __name__ == "__main__":
