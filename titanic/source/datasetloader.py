@@ -7,6 +7,14 @@ def extract_title(name):
     return title
 
 
+def impute_age(df):
+    for title in df['Title'].unique():
+        for pclass in df['Pclass'].unique():
+            median_age = df[(df['Title'] == title) & (df['Pclass'] == pclass)]['Age'].median()
+            df.loc[(df['Age'].isnull()) & (df['Title'] == title) & (df['Pclass'] == pclass), 'Age'] = median_age
+    return df
+
+
 def engineer_features(df):
     # Extract titles
     df['Title'] = df['Name'].apply(extract_title)
@@ -35,8 +43,8 @@ def load_data():
 
     print(train_df.isnull().sum())
 
-    train_df['Age'].fillna(train_df['Age'].median(), inplace=True)
-    test_df['Age'].fillna(test_df['Age'].median(), inplace=True)
+    train_df = impute_age(train_df)
+    test_df = impute_age(test_df)
 
     train_df['Embarked'].fillna(train_df['Embarked'].mode()[0], inplace=True)
     test_df['Embarked'].fillna(test_df['Embarked'].mode()[0], inplace=True)
