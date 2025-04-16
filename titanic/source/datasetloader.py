@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from sklearn.preprocessing import LabelEncoder
 
 
@@ -44,7 +45,8 @@ def engineer_features(df):
     df['IsAlone'] = (df['SibSp'] + df['Parch'] == 0).astype(int)
 
     # Create fare per person
-    df['FarePerPerson'] = df['Fare'] / (df['FamilySize'] + 1e-6) # Added a small epsilon to prevent division by zero
+    df['FarePerPerson'] = df['Fare'] / df['FamilySize']
+    df['FarePerPerson'].replace([np.inf, -np.inf], 0, inplace=True)
 
     return df
 
@@ -77,19 +79,36 @@ def load_data():
     train_df['Sex'] = train_df['Sex'].map({'male': 0, 'female': 1})
     test_df['Sex'] = test_df['Sex'].map({'male': 0, 'female': 1})
 
-    # Convert 'Embarked' to numerical using LabelEncoder
-    encoder = LabelEncoder()
-    train_df['Embarked'] = encoder.fit_transform(train_df['Embarked'])
-    test_df['Embarked'] = encoder.transform(test_df['Embarked'])
+ # One-Hot Encode Categorical Features
+    categorical_features = ['Title', 'AgeGroup', 'FareCategory', 'Embarked']
+    train_categorical = pd.get_dummies(train_df[categorical_features], drop_first=True) # drop_first=True to avoid multicollinearity
+    test_categorical = pd.get_dummies(test_df[categorical_features], drop_first=True)
 
-    features = ["Pclass", "Sex", "Age", "Fare", "Embarked", "FamilySize",
-                "IsAlone", "FarePerPerson"]
+    # Align columns between train and test sets
+    train_cols = set(train_categorical.columns)
+    test_cols = set(test_categorical.columns)
 
-    X_train = train_df[features].copy() # Use .copy() to avoid SettingWithCopyWarning
-    y_train = train_df["Survived"].copy()
-    X_test = test_df[features].copy()
+    missing_in_test = list(train_cols - test_cols)
+    for col in missing_in_test:
+        test_categorical[col] = 0
 
-    # Fill any remaining NaN values with the median of the column
+    missing_in_train = list(test_cols - train_cols)
+    for col in missing_in_train:
+        train_categorical[col] = 0
+
+    test_categorical = test_categorical[train_categorical.columns] # Ensure same order
+
+    numerical_features = ["Pclass", "Sex", "Age", "Fare", "FamilySize",
+                          "IsAlone", "FarePerPerson"]
+
+    X_train_numerical = train_df[numerical_features]
+    X_test_numerical = test_df[numerical_features]
+
+    X_train = pd.concat([X_train_numerical, train_categorical], axis=1)
+    y_train = train_df["Survived"]
+    X_test = pd.concat([X_test_numerical, test_categorical], axis=1)
+
+    # Fill any remaining NaN values with the median of the column (important after one-hot encoding too)
     for col in X_train.columns:
         if X_train[col].isnull().any():
             median_val = X_train[col].median()
