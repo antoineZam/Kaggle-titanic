@@ -99,6 +99,9 @@ def load_data():
     train_df = handle_deck(train_df)
     test_df = handle_deck(test_df)
 
+    train_df = pclass_age_group_interaction(train_df)
+    test_df = pclass_age_group_interaction(test_df)
+    
  # One-Hot Encode Categorical Features
     categorical_features = ['Title', 'AgeGroup', 'FareCategory', 'Embarked', 'Deck', 'Pclass_AgeGroup']
     train_categorical = pd.get_dummies(train_df[categorical_features], drop_first=True) # drop_first=True to avoid multicollinearity
