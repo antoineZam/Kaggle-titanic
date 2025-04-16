@@ -34,15 +34,22 @@ def engineer_features(df):
     return df
 
 
+
 def load_data():
     train_df = pd.read_csv("../data/train.csv")
     test_df = pd.read_csv("../data/test.csv")
 
-    #print(train_df.head())
-    #print(test_df.head())
+    # Create 'FamilySize' feature
+    train_df['FamilySize'] = train_df['SibSp'] + train_df['Parch'] + 1
+    test_df['FamilySize'] = test_df['SibSp'] + test_df['Parch'] + 1
+
+    # Engineer additional features (this depends on 'FamilySize')
+    train_df = engineer_features(train_df)
+    test_df = engineer_features(test_df)
 
     print(train_df.isnull().sum())
 
+    # Impute age (this depends on 'Title' created in engineer_features)
     train_df = impute_age(train_df)
     test_df = impute_age(test_df)
 
@@ -61,15 +68,7 @@ def load_data():
     train_df['Embarked'] = encoder.fit_transform(train_df['Embarked'])
     test_df['Embarked'] = encoder.transform(test_df['Embarked'])
 
-    # Create 'FamilySize' feature
-    train_df['FamilySize'] = train_df['SibSp'] + train_df['Parch'] + 1
-    test_df['FamilySize'] = test_df['SibSp'] + test_df['Parch'] + 1
-
-    # Engineer additional features
-    train_df = engineer_features(train_df)
-    test_df = engineer_features(test_df)
-
-    features = ["Pclass", "Sex", "Age", "Fare", "Embarked", "FamilySize", 
+    features = ["Pclass", "Sex", "Age", "Fare", "Embarked", "FamilySize",
                 "IsAlone", "FarePerPerson"]
 
     X_train = train_df[features]
@@ -77,6 +76,8 @@ def load_data():
     X_test = test_df[features]
 
     # Save processed datasets to CSV files
+    import os
+    os.makedirs('../data/processed', exist_ok=True)
     X_train.to_csv('../data/processed/train_features.csv', index=False)
     y_train.to_csv('../data/processed/train_target.csv', index=False)
     X_test.to_csv('../data/processed/test_features.csv', index=False)
@@ -87,6 +88,7 @@ def load_data():
     print("- ../data/processed/test_features.csv")
 
     return X_train, y_train, X_test, test_df['PassengerId']
+
 
 
 if __name__ == "__main__":
