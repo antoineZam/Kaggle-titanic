@@ -29,8 +29,8 @@ def engineer_features(df):
     df['IsAlone'] = (df['SibSp'] + df['Parch'] == 0).astype(int)
     
     # Create fare per person
-    df['FarePerPerson'] = df['Fare'] / (df['FamilySize'])
-    
+    df['FarePerPerson'] = df['Fare'] / (df['FamilySize'] + 1e-6)
+
     return df
 
 
